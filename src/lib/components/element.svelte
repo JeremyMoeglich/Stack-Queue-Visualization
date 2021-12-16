@@ -20,7 +20,7 @@
 		align-items: center;
 		margin: 10px;
 		background-color: var(--lt-color-gray-700);
-		width: 60px;
+        width: 60px;  
 		height: 60px;
 		border-radius: 10px;
 		border: 3px solid green;

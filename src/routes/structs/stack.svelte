@@ -10,6 +10,9 @@
 		if (typeof v === 'undefined') {
 			return Error('Missing Attribute: v');
 		}
+        if (stack.length > 5) {
+			return Error('Stack is full')
+		}
 		stack = [...stack, [e_index, v]];
 		e_index++;
 		return `Pushed element ${v} onto stack`;
@@ -73,13 +76,15 @@
 	.elements {
 		display: flex;
 		flex-direction: column-reverse;
-		justify-content: center;
 		border-left: 10px solid white;
 		border-right: 10px solid white;
+        border-bottom: 10px solid white;
 		min-width: 100px;
 		min-height: 80vh;
+        max-height: 80vh;
 		margin-left: auto;
 		margin-right: auto;
 		padding: 20px;
+        border-radius: 10px;
 	}
 </style>

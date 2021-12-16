@@ -9,6 +9,9 @@
 		if (typeof v === 'undefined') {
 			return Error('Missing Attribute: v');
 		}
+		if (queue.length > 6) {
+			return Error('Queue is full')
+		}
 		queue = [[e_index, v], ...queue];
 		e_index++;
 		return `Pushed element ${v} onto queue`;

@@ -34,6 +34,10 @@
 	a {
 		color: rgb(0, 238, 255);
 		text-decoration: none;
+		padding: 5px;
+		&:hover {
+			background-color: var(--lt-color-gray-600);
+		}
 	}
 	:global(button) {
 		padding: 20px 10px;
