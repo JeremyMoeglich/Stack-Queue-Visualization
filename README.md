@@ -1,3 +1,3 @@
 # Stack-Queue-Visualization
 
-Deployed here: stack-queue-visualization.netlify.app
+Deployed here: https://stack-queue-visualization.netlify.app
