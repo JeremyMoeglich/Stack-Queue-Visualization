@@ -35,7 +35,7 @@
 		return stack.at(-1)[1];
 	}
 	function printStack() {
-		return stack;
+		return stack.map((v) => v[1]).reverse();
 	}
 
 	const commands = {

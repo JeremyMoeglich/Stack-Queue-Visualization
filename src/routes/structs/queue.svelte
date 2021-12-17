@@ -34,7 +34,7 @@
 		return queue.at(-1)[1];
 	}
 	function printQueue() {
-		return queue;
+		return queue.map((v) => v[1]).reverse();
 	}
 
 	const commands = {
