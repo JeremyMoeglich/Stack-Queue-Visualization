@@ -4,12 +4,17 @@
 	import { element, prevent_default } from 'svelte/internal';
 
 	let command_value = '';
-	let console_log = [];
+	let console_log = ['Type help() for more info'];
 	let command_history = [];
 
 	export let commands: { [key: string]: Function };
 
+	function help() {
+		return Object.keys(commands).join(', ')
+	}
+
 	function command_execution() {
+		commands.help = help
 		const returned_value = parser.parse_code_line(command_value, commands);
 		console_log = [...console_log, `> ${command_value}`];
 		if (command_history.at(-1) !== command_value) {
