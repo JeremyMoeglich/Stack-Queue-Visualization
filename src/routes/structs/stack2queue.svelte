@@ -53,8 +53,8 @@
 
 	let stack1 = new Stack();
 	let stack2 = new Stack();
-	const delay = 1000
-	const animate_factor = 0.7
+	let delay = 400
+	const animate_factor = 1
 	async function enqueue(v: any) {
 		if (typeof v === 'undefined') {
 			return Error('Missing Attribute: v');
@@ -109,9 +109,6 @@
 		front: front,
 		printQueue: printQueue
 	};
-	stack1.push(5)
-	stack1.push(9)
-	stack1.push(2)
 	stack1 = stack1
 
 	import { crossfade } from 'svelte/transition';
@@ -125,10 +122,10 @@
 			const transform = style.transform === 'none' ? '' : style.transform;
 
 			return {
-				duration: 600,
+				duration: delay*animate_factor,
 				easing: quintOut,
 				css: (t, u) => `
-					transform: translateY(${u * -400}%);
+					transform: translateY(${u * -delay*animate_factor}%);
 					opacity: ${t}
 				`
 			};
