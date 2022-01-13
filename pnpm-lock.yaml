@@ -12,6 +12,7 @@ specifiers:
   eslint-plugin-svelte3: ^3.3.0
   lodash: ^4.17.21
   node-sass: ^7.0.1
+  pnpm: ^6.26.0
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.5.1
   sass: ^1.48.0
@@ -40,6 +41,7 @@ devDependencies:
   eslint: 7.32.0
   eslint-config-prettier: 8.3.0_eslint@7.32.0
   eslint-plugin-svelte3: 3.3.0_eslint@7.32.0+svelte@3.46.1
+  pnpm: 6.26.0
   prettier: 2.5.1
   prettier-plugin-svelte: 2.5.1_prettier@2.5.1+svelte@3.46.1
   svelte: 3.46.1
@@ -2036,6 +2038,12 @@ packages:
   /picomatch/2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+
+  /pnpm/6.26.0:
+    resolution: {integrity: sha512-/ZRkBFts6AguZZgzz3lzvmsaae1QajC01BPd+jDAeajzEMO+q6q5VjxZKaM8JjCusBlmaVaAlIQICg7pyHNkwA==}
+    engines: {node: '>=12.17'}
+    hasBin: true
+    dev: true
 
   /postcss/8.4.5:
     resolution: {integrity: sha512-jBDboWM8qpaqwkMwItqTQTiFikhs/67OYVvblFFTM7MrZjt6yMKd6r2kgXizEbTTljacm4NldIlZnhbjr84QYg==}
