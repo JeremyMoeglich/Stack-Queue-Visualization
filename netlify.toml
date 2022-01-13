@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "pnpm build || ( npm install pnpm && pnpm build )"
   publish = "build"
 
 [functions]
@@ -7,4 +7,4 @@
   node_bundler = "esbuild"
 
 [build.environment]
-    NPM_FLAGS="--prefix=/"
+    NPM_FLAGS = "--version"
