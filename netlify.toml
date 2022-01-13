@@ -1,7 +1,6 @@
 [build]
-  command = "npm run build"
+  command = "npx pnpm install --store=node_modules/.pnpm-store && npx pnpm build -r"
   publish = "build"
 
-[functions]
-  directory = "functions"
-  node_bundler = "esbuild"
+[build.environment]
+  NPM_FLAGS = "--version" # this prevents npm install from happening
