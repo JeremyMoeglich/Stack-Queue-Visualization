@@ -3,7 +3,7 @@
 	import { flip } from 'svelte/animate';
 	import { fly } from 'svelte/transition';
 	import Element from '$lib/components/element.svelte';
-	import { map } from 'lodash';
+	import _ from 'lodash'
 
 	function sleep(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
@@ -42,7 +42,7 @@
 			return this.values[this.values.length - 1].element;
 		}
 		printStack(): Array<any> {
-			return map(this.values, (v: unique_element) => {
+			return _.map(this.values, (v: unique_element) => {
 				return v.element;
 			});
 		}
@@ -53,7 +53,8 @@
 
 	let stack1 = new Stack();
 	let stack2 = new Stack();
-	const delay = 600
+	const delay = 1000
+	const animate_factor = 0.7
 	async function enqueue(v: any) {
 		if (typeof v === 'undefined') {
 			return Error('Missing Attribute: v');
@@ -140,8 +141,8 @@
 	<div class="elements">
 		{#each stack1.values as e (e.id)}
 			<div
-				in:receive={{ key: e.id, duration: 500 }}
-				out:send={{ key: e.id, duration: 500 }}
+				in:receive={{ key: e.id, duration: delay*animate_factor }}
+				out:send={{ key: e.id, duration: delay*animate_factor }}
 			>
 				<Element value={e.element} />
 			</div>
@@ -150,9 +151,8 @@
 	<div class="elements">
 		{#each stack2.values as e (e.id)}
 			<div
-				animate:flip={{ duration: 500 }}
-				in:receive={{ key: e.id, duration: 500 }}
-				out:send={{ key: e.id, duration: 500 }}
+				in:receive={{ key: e.id, duration: delay*animate_factor }}
+				out:send={{ key: e.id, duration: delay*animate_factor }}
 			>
 				<Element value={e.element} />
 			</div>
