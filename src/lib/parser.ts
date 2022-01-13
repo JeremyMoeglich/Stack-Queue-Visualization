@@ -12,7 +12,7 @@ const func = `(${code_text}${ordering})`;
 const expression = `(${func}|${value}|${code_text})|${white_space}|${p_opperation}|${l_opperation}|${ordering}`;
 const assignment = `(${code_text}${white_space}=${white_space}${expression})`;
 const code_line = `(${assignment}|${expression})`;
-export let variables: { [key: string]: number | string | undefined | boolean } = {
+export const variables: { [key: string]: number | string | undefined | boolean } = {
 	True: true,
 	true: true,
 	False: false,
@@ -32,12 +32,12 @@ function parse_string(v: string): string | Error {
 	return v.slice(1, -1);
 }
 
-function execute_assignment(v: string, commands: { [key: string]: Function }) {
+async function execute_assignment(v: string, commands: { [key: string]: Function }) {
 	v = v.trim();
 	const equal_index = v.indexOf('=');
 	const var_name = v.slice(0, equal_index).trim();
 	const value = v.slice(equal_index + 1).trim();
-	const parsed_value = parse_expression(value, commands);
+	const parsed_value = await parse_expression(value, commands);
 	if (parsed_value instanceof Error) {
 		return parsed_value;
 	}
@@ -62,10 +62,10 @@ function parse_value(v: string) {
 	}
 }
 
-function parse_func(
+async function parse_func(
 	v: string,
 	commands: { [key: string]: Function }
-): string | number | Error | boolean | undefined {
+): Promise<string | number | Error | boolean | undefined> {
 	let layer = 0;
 	let index: number | undefined = undefined;
 	for (const [current_index, char] of v.split('').reverse().entries()) {
@@ -87,15 +87,23 @@ function parse_func(
 	if (!(command in commands)) {
 		return Error('Unknown Command');
 	}
-
+	const isAsync = commands[command].constructor.name === 'AsyncFunction';
 	if (value) {
-		const parsed_value = parse_expression(value, commands);
+		const parsed_value = await parse_expression(value, commands);
 		if (parsed_value instanceof Error) {
 			return parsed_value;
 		}
-		return commands[command](parsed_value);
+		if (isAsync) {
+			return await commands[command](parsed_value);
+		} else {
+			return commands[command](parsed_value);
+		}
 	} else {
-		return commands[command]();
+		if (isAsync) {
+			return await commands[command]();
+		} else {
+			return commands[command]();
+		}
 	}
 }
 
@@ -120,19 +128,16 @@ function stringify(v: any): any {
 }
 
 function is_ordering(v: string): boolean {
-    v = v.trim()
-    if (v[0] !== '(') {
-        return false
-    }
-    else if (v.at(-1) !== ')') {
-        return false
-    }
-    else if (v.split(')').length > 2) {
-        return false
-    }
-    else {
-        return true
-    }
+	v = v.trim();
+	if (v[0] !== '(') {
+		return false;
+	} else if (v.at(-1) !== ')') {
+		return false;
+	} else if (v.split(')').length > 2) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 function is_operation(v: string, operator_reg_string: string): boolean {
@@ -157,11 +162,11 @@ function is_operation(v: string, operator_reg_string: string): boolean {
 	}
 }
 
-function parse_opperation(
+async function parse_opperation(
 	v: string,
 	commands: { [key: string]: Function },
 	operator_reg_string: string
-): string | number | Error | undefined | boolean {
+): Promise<string | number | Error | undefined | boolean> {
 	let layer = 0;
 	let index: number | undefined = undefined;
 	const operator_regex = new RegExp(`^(${operator_reg_string})$`);
@@ -179,11 +184,11 @@ function parse_opperation(
 	if (index === undefined) {
 		return Error('Invalid Brackets');
 	}
-	const expr1 = parse_expression(v.slice(0, index), commands);
+	const expr1 = await parse_expression(v.slice(0, index), commands);
 	if (expr1 instanceof Error) {
 		return expr1;
 	}
-	const expr2 = parse_expression(v.slice(index + 1), commands);
+	const expr2 = await parse_expression(v.slice(index + 1), commands);
 	if (expr2 instanceof Error) {
 		return expr2;
 	}
@@ -191,26 +196,26 @@ function parse_opperation(
 	return eval(`${stringify(expr1)}${chosen_operator}${stringify(expr2)}`);
 }
 
-function parse_ordering(
+async function parse_ordering(
 	v: string,
 	commands: { [key: string]: Function }
-): string | number | Error | undefined | boolean {
-	return parse_expression(v.slice(1, v.length - 1), commands);
+): Promise<string | number | Error | undefined | boolean> {
+	return await parse_expression(v.slice(1, v.length - 1), commands);
 }
 
-function parse_expression(
+async function parse_expression(
 	v: string,
 	commands: { [key: string]: Function }
-): string | number | Error | undefined | boolean {
+): Promise<string | number | Error | undefined | boolean> {
 	v = v.trim();
 	if (new RegExp(`^(${ordering})$`).test(v) && is_ordering(v)) {
-		return parse_ordering(v, commands);
+		return await parse_ordering(v, commands);
 	} else if (new RegExp(`^(${l_opperation})$`).test(v) && is_operation(v, l_operator)) {
-		return parse_opperation(v, commands, l_operator);
+		return await parse_opperation(v, commands, l_operator);
 	} else if (new RegExp(`^(${p_opperation})$`).test(v) && is_operation(v, p_operator)) {
-		return parse_opperation(v, commands, p_operator);
+		return await parse_opperation(v, commands, p_operator);
 	} else if (new RegExp(`^(${func})$`).test(v)) {
-		return parse_func(v, commands);
+		return await parse_func(v, commands);
 	} else if (new RegExp(`^(${value})$`).test(v)) {
 		return parse_value(v);
 	} else if (new RegExp(`^(${code_text})$`).test(v)) {
@@ -222,15 +227,15 @@ function parse_expression(
 	}
 }
 
-export function parse_code_line(
+export async function parse_code_line(
 	v: string,
 	commands: { [key: string]: Function }
-): Error | string | number | boolean | undefined {
-    v = v.trim()
+): Promise<Error | string | number | boolean | undefined> {
+	v = v.trim();
 	if (!new RegExp(`^(${code_line})$`).test(v)) {
 		return Error('Syntax Error');
 	} else if (new RegExp(`^(${expression})$`).test(v)) {
-		return parse_expression(v, commands);
+		return await parse_expression(v, commands);
 	} else if (new RegExp(`^(${assignment})$`).test(v)) {
 		return execute_assignment(v, commands);
 	} else {
@@ -238,11 +243,10 @@ export function parse_code_line(
 	}
 }
 const cmds = {
-	push: (v: any) => {
+	push: async (v: any) => {
 		return v;
 	},
 	pop: () => {
 		return 'some value';
 	}
 };
-

@@ -1,16 +1,16 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Deno",
-            "type": "node",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${file}",
-            "runtimeExecutable": "deno",
-            "runtimeArgs": ["run", "--inspect-brk=127.0.0.1:33333", "-A"],
-            "outputCapture": "std",
-            "attachSimplePort": 33333
-        }
-    ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Deno",
+			"type": "node",
+			"request": "launch",
+			"cwd": "${workspaceFolder}",
+			"program": "${file}",
+			"runtimeExecutable": "deno",
+			"runtimeArgs": ["run", "--inspect-brk=127.0.0.1:33333", "-A"],
+			"outputCapture": "std",
+			"attachSimplePort": 33333
+		}
+	]
 }

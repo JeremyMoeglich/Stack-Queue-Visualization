@@ -3,14 +3,15 @@
 	import { flip } from 'svelte/animate';
 	import { fly } from 'svelte/transition';
 	import Element from '$lib/components/element.svelte';
+	import type { JSONString } from '@sveltejs/kit/types/helper';
 	let queue = [];
 	let e_index = 0;
-	function push(v) {
+	function push(v: JSONString) {
 		if (typeof v === 'undefined') {
 			return Error('Missing Attribute: v');
 		}
 		if (queue.length > 6) {
-			return Error('Queue is full')
+			return Error('Queue is full');
 		}
 		queue = [[e_index, v], ...queue];
 		e_index++;

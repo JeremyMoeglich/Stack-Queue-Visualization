@@ -1,7 +1,5 @@
 <script lang="ts">
 	import * as parser from '$lib/parser';
-	import * as animateScroll from 'svelte-scrollto';
-	import { element, prevent_default } from 'svelte/internal';
 
 	let command_value = '';
 	let console_log = ['Type help() for more info'];
@@ -10,43 +8,40 @@
 	export let commands: { [key: string]: Function };
 
 	function help() {
-		return Object.keys(commands).join(', ')
+		return Object.keys(commands).join(', ');
 	}
 
-	function command_execution() {
-		commands.help = help
-		const returned_value = parser.parse_code_line(command_value, commands);
+	async function command_execution() {
+		commands.help = help;
+		const returned_value = await parser.parse_code_line(command_value, commands);
 		console_log = [...console_log, `> ${command_value}`];
 		if (command_history.at(-1) !== command_value) {
-			command_history.push(command_value)
+			command_history.push(command_value);
 		}
 		if (typeof returned_value !== 'undefined') {
 			console_log = [...console_log, `${returned_value}`];
 		}
 		command_value = '';
 		const console_obj = document.getElementById('console');
-		console.log(console_obj.scrollHeight)
 		console_obj.scrollTop = console_obj.scrollHeight;
 	}
-	let history_index = 0
-	function keydown_input(event) {
+	let history_index = 0;
+	async function keydown_input(event: { key: string; preventDefault: Function }) {
 		if (event.key === 'Enter') {
-			command_execution();
-			history_index = 0
-		}
-		else if (event.key === 'ArrowUp') {
-			event.preventDefault()
+			await command_execution();
+			history_index = 0;
+		} else if (event.key === 'ArrowUp') {
+			event.preventDefault();
 			if (history_index < command_history.length) {
-				history_index++
+				history_index++;
 			}
-			command_value = command_history.at(-history_index)
-		}
-		else if (event.key === 'ArrowDown') {
-			event.preventDefault()
+			command_value = command_history.at(-history_index);
+		} else if (event.key === 'ArrowDown') {
+			event.preventDefault();
 			if (history_index > 1) {
-				history_index--
+				history_index--;
 			}
-			command_value = command_history.at(-history_index)
+			command_value = command_history.at(-history_index);
 		}
 	}
 </script>
@@ -63,7 +58,7 @@
 		{#each console_log as value}
 			<p>{`${value}`}</p>
 		{/each}
-		> <input id="input" type="text" bind:value={command_value} on:keydown={keydown_input}/>
+		> <input id="input" type="text" bind:value={command_value} on:keydown={keydown_input} />
 	</div>
 
 	<div>

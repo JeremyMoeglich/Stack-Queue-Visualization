@@ -1,7 +1,7 @@
 <script context="module">
-	export const load = async ({ page }) => ({
+	export const load = async ({ url }) => ({
 		props: {
-			key: page.path
+			key: url.pathname
 		}
 	});
 </script>
@@ -14,6 +14,7 @@
 <div class="site">
 	<a href="/structs/queue">Queue</a>
 	<a href="/structs/stack">Stack</a>
+	<a href="/structs/stack2queue">Stack2Queue</a>
 	<PageTransition refresh={key}>
 		<slot />
 	</PageTransition>
